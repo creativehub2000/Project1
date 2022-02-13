@@ -6,9 +6,9 @@
     "scripts": {
         "build1": "tsc --build",
         "build": "tsc --composite false",
-        "test": "jest --",
+        "test": "jest",
         "test1": "jest --json --outputFile=test-results.json",
-        "coverage": "jest --collectCoverage --",
+        "coverage": "jest --collectCoverage",
         "start": "ts-node src/index.ts"
     },
     "keywords": [],
@@ -17,6 +17,7 @@
     "dependencies": {
         "@jest/types": "^27.5.1",
         "@types/express": "^4.17.13",
+        "@types/jest": "^27.4.0",
         "@types/node": "^17.0.16",
         "@types/supertest": "^2.0.11",
         "express": "^4.17.2",
