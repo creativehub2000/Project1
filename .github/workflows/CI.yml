@@ -42,6 +42,7 @@ jobs:
     - name: Run Tests
       run: npm test
 
+
   Job3-Upload-Test-Failure-Report:
     runs-on: ubuntu-latest
     if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
@@ -51,12 +52,13 @@ jobs:
     - name: Upload Test coverage as Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: test_coverage_node
-        path: test-report/index.html
+        name: test_coverage
+        path: test-report.html
   
 
   Job3-Create-Issue:
     runs-on: ubuntu-latest
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: [Job3-Upload-Test-Failure-Report]
     # if: ${{ failure() }}
 
