@@ -24,8 +24,8 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
        
     - name: Install dependencies
-      run: npm install
-      working-directory: ./nodeapp
+      run: npm ci
+      # working-directory: ./nodeapp
 
     - name: Do Node App Code Analysis NodeApp
       run: echo "Do code analysis here..."
@@ -35,16 +35,25 @@ jobs:
 
     - name: Run Tests
       run: npm test
-      working-directory: ./nodeapp
+      # working-directory: ./nodeapp
 
     - name: Upload Test coverage as Artifact
       uses: actions/upload-artifact@v2
       with:
         name: test_coverage_node
-        path: ./nodeapp/test-report/index.html
+        path: ./test-report/index.html
       # run: echo "Upload test coverage here..."
     
-    
+    - name: Create Issue Action
+      if: ${{ failure() }}
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+        title: Automated Issue from 
+        token: ${{secrets.SEMANTIC_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: workflow-failed
+        body: This issue was automatically created by GitHub ${{github.sha}}
+
       # - name: Build project
       # run: npm run build
       # working-directory: ./nodeapp
@@ -56,23 +65,23 @@ jobs:
     #     name: Build
     #     path: ./nodeapp/build
 
-  Job2-Deploy-NodeApp:
-    needs: [Job1-Build-NodeApp]
-    runs-on: ubuntu-latest
+  # Job2-Deploy-NodeApp:
+  #   needs: [Job1-Build-NodeApp]
+  #   runs-on: ubuntu-latest
     # environment: 
     #   name: staging
     #   url:  https://stagingdeploy.azurewebsites.net         # set application url
 
-    steps:
-    - name: Deploy to Node App Staging Server
-      run: echo "Deploy Node App build to staging here..."
+    # steps:
+    # - name: Deploy to Node App Staging Server
+    #   run: echo "Deploy Node App build to staging here..."
       
-    - name: Create Issue Action
-      if: ${{ failure() }}
-      uses: nashmaniac/create-issue-action@v1.1
-      with:
-        title: Automated Issue from 
-        token: ${{secrets.SEMANTIC_TOKEN}}
-        assignees: ${{github.actor}}
-        labels: workflow-failed
-        body: This issue was automatically created by GitHub ${{github.sha}} 
+    # - name: Create Issue Action
+    #   if: ${{ failure() }}
+    #   uses: nashmaniac/create-issue-action@v1.1
+    #   with:
+    #     title: Automated Issue from 
+    #     token: ${{secrets.SEMANTIC_TOKEN}}
+    #     assignees: ${{github.actor}}
+    #     labels: workflow-failed
+    #     body: This issue was automatically created by GitHub ${{github.sha}} 
