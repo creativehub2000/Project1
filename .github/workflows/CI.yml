@@ -1,0 +1,78 @@
+name: MonoRepo  CI
+
+on:
+ pull_request:
+    branches: [develop, master]
+ push:
+    branches: [develop, master]
+    
+env:
+  NODE_VERSION: '14.x'                                             # set this to the node version to use
+
+jobs:
+
+  Job1-Build-NodeApp:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+            
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+       
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./nodeapp
+
+    - name: Do Node App Code Analysis NodeApp
+      run: echo "Do code analysis here..."
+
+    - name: Upload Code coverage as Artifact
+      run: echo "Upload code analysis coverage here..."
+
+    - name: Run Tests
+      run: npm test
+      working-directory: ./nodeapp
+
+    - name: Upload Test coverage as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: test_coverage_node
+        path: ./nodeapp/test-report/index.html
+      # run: echo "Upload test coverage here..."
+    
+    
+      # - name: Build project
+      # run: npm run build
+      # working-directory: ./nodeapp
+
+    # - name: Upload Build folder as Artifact
+    #   if: github.event_name == 'push'
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: Build
+    #     path: ./nodeapp/build
+
+  Job2-Deploy-NodeApp:
+    needs: [Job1-Build-NodeApp]
+    runs-on: ubuntu-latest
+    # environment: 
+    #   name: staging
+    #   url:  https://stagingdeploy.azurewebsites.net         # set application url
+
+    steps:
+    - name: Deploy to Node App Staging Server
+      run: echo "Deploy Node App build to staging here..."
+      
+    - name: Create Issue Action
+      if: ${{ failure() }}
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+        title: Automated Issue from 
+        token: ${{secrets.SEMANTIC_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: workflow-failed
+        body: This issue was automatically created by GitHub ${{github.sha}} 
