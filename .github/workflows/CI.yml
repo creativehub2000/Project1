@@ -52,13 +52,14 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: test_coverage_node
-        path: ./test-report/index.html
+        path: test-report/index.html
   
 
   Job3-Create-Issue:
     runs-on: ubuntu-latest
-    if: ${{ failure() }}
-    
+    needs: [Job3-Upload-Test-Failure-Report]
+    # if: ${{ failure() }}
+
     steps:
     - name: Create Issue Action
       uses: nashmaniac/create-issue-action@v1.1
