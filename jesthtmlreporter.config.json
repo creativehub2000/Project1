@@ -1,0 +1,5 @@
+{
+	"pageTitle": "Free Learn Test Suite",
+	"outputPath": "test-report/index.html",
+	"includeFailureMsg": true
+}
