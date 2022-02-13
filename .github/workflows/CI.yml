@@ -33,19 +33,34 @@ jobs:
     - name: Upload Code coverage as Artifact
       run: echo "Upload code analysis coverage here..."
 
+
+  Job2-Run-Tests:
+    needs: [Job1-Build-NodeApp]
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Run Tests
       run: npm test
-      # working-directory: ./nodeapp
 
+  Job3-Upload-Test-Failure-Report:
+    runs-on: ubuntu-latest
+    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
+    needs: [Job2-Run-Tests]
+
+    steps:
     - name: Upload Test coverage as Artifact
       uses: actions/upload-artifact@v2
       with:
         name: test_coverage_node
         path: ./test-report/index.html
-      # run: echo "Upload test coverage here..."
+  
+
+  Job3-Create-Issue:
+    runs-on: ubuntu-latest
+    if: ${{ failure() }}
     
+    steps:
     - name: Create Issue Action
-      if: ${{ failure() }}
       uses: nashmaniac/create-issue-action@v1.1
       with:
         title: Automated Issue from 
