@@ -33,33 +33,44 @@ jobs:
     - name: Upload Code coverage as Artifact
       run: echo "Upload code analysis coverage here..."
 
-
-  Job2-Run-Tests:
-    needs: [Job1-Build-NodeApp]
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Run Tests
       run: npm test
 
-
-  Job3-Upload-Test-Failure-Report:
-    runs-on: ubuntu-latest
-    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
-    needs: [Job2-Run-Tests]
-
-    steps:
-    - name: Upload Test coverage as Artifact
+    - name: Upload Test Report as Artifact
+      if: ${{ always() }}
       uses: actions/upload-artifact@v2
       with:
-        name: test_coverage
+        name: Test Report
         path: ./test-report.html
+
+
+  # Job2-Run-Tests:
+  #   needs: [Job1-Build-NodeApp]
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: Run Tests
+  #     run: npm test
+
+
+  # Job3-Upload-Test-Failure-Report:
+  #   runs-on: ubuntu-latest
+  #   if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
+  #   needs: [Job2-Run-Tests]
+
+  #   steps:
+  #   - name: Upload Test coverage as Artifact
+  #     uses: actions/upload-artifact@v2
+  #     with:
+  #       name: test_coverage
+  #       path: ./test-report.html
   
 
   Job3-Create-Issue:
+    needs: [Job1-Build-NodeApp]
     runs-on: ubuntu-latest
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
-    needs: [Job3-Upload-Test-Failure-Report]
+    # if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    # needs: [Job3-Upload-Test-Failure-Report]
     # if: ${{ failure() }}
 
     steps:
