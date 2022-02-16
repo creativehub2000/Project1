@@ -80,7 +80,7 @@ jobs:
   Job2-Create-Issue:
     # needs: [Job1-Build-NodeApp]
     runs-on: ubuntu-latest
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
     needs: [Job1-Build-NodeApp]
     # if: ${{ failure() }}
 
