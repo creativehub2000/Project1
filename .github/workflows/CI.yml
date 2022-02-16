@@ -1,4 +1,4 @@
-name: MonoRepo  CI
+name: Repo  CI
 
 on:
  pull_request:
@@ -23,25 +23,36 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
        
-    - name: Install dependencies
+    - name: Install App dependencies
       run: npm ci
       # working-directory: ./nodeapp
 
-    - name: Do Node App Code Analysis NodeApp
-      run: echo "Do code analysis here..."
+    # - name: Do Node App Code Analysis NodeApp
+    #   run: echo "Do code analysis here..."
 
-    - name: Upload Code coverage as Artifact
-      run: echo "Upload code analysis coverage here..."
+    # - name: Upload Code coverage as Artifact
+    #   run: echo "Upload code analysis coverage here..."
 
-    - name: Run Tests
+    - name: Run Unit Tests
       run: npm test
 
-    - name: Upload Test Report as Artifact
+    - name: Deploy GitHub Page (to develop branch)
       if: ${{ always() }}
-      uses: actions/upload-artifact@v2
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: Test Report
-        path: ./test-report.html
+        github_token: ${{ secrets.SEMANTIC_TOKEN }}
+        publish_dir: ./public
+        publish_branch: develop
+        allow_empty_commit: true
+
+    # - name: Upload Test Report as Artifact
+    #   if: ${{ always() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: Test Report
+    #     path: ./test-report.html
+    #     if-no-files-found: ignore
+    #     retention-days: 30
 
 
   # Job2-Run-Tests:
@@ -74,10 +85,10 @@ jobs:
     # if: ${{ failure() }}
 
     steps:
-    - name: Create Issue Action
+    - name: Create Issue
       uses: nashmaniac/create-issue-action@v1.1
       with:
-        title: Automated Issue from 
+        title: Automated Issue from workflow
         token: ${{secrets.SEMANTIC_TOKEN}}
         assignees: ${{github.actor}}
         labels: workflow-failed
