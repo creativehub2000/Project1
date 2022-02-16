@@ -91,8 +91,9 @@ jobs:
         title: Automated Issue from workflow
         token: ${{secrets.SEMANTIC_TOKEN}}
         assignees: ${{github.actor}}
-        labels: workflow-failed
-        body: This issue was automatically created by GitHub ${{github.sha}}
+        labels: test-failed
+        body: "Test Report is out. <${{https://creativehub2000.github.io/Project1/index.html}}|check it now.>"
+        # body: This issue was automatically created by GitHub ${{github.sha}}
 
       # - name: Build project
       # run: npm run build
