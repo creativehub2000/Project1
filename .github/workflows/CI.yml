@@ -77,11 +77,11 @@ jobs:
   #       path: ./test-report.html
   
 
-  Job3-Create-Issue:
-    needs: [Job1-Build-NodeApp]
+  Job2-Create-Issue:
+    # needs: [Job1-Build-NodeApp]
     runs-on: ubuntu-latest
-    # if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
-    # needs: [Job3-Upload-Test-Failure-Report]
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    needs: [Job1-Build-NodeApp]
     # if: ${{ failure() }}
 
     steps:
