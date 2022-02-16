@@ -78,11 +78,11 @@ jobs:
   
 
   Job2-Create-Issue:
-    # needs: [Job1-Build-NodeApp]
-    runs-on: ubuntu-latest
-    if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
     needs: [Job1-Build-NodeApp]
-    # if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    # if: ${{ always() && contains(join(needs.*.result, ','), 'failure') }}
+    # needs: [Job1-Build-NodeApp]
+    if: ${{ failure() }}
 
     steps:
     - name: Create Issue
@@ -92,7 +92,7 @@ jobs:
         token: ${{secrets.SEMANTIC_TOKEN}}
         assignees: ${{github.actor}}
         labels: test-failed
-        body: "Test Report is out. <$https://creativehub2000.github.io/Project1/index.html|check it now.>"
+        body: "Test Report is out. <${{'https://creativehub2000.github.io/Project1/index.html'}}|check it now.>"
         # body: This issue was automatically created by GitHub ${{github.sha}}
 
       # - name: Build project
